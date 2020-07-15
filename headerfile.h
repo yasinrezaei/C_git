@@ -1,2 +1,5 @@
 #include"functions.c"
-void testfunc();
+void printmenu();
+int file_exist(char filename[]);
+void create_copy(char filenam[]);
+void compareFiles(char filename[]);
