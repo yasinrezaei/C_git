@@ -8,6 +8,7 @@
  */
 
 int main(){
+
     char filename[100];
     int select_id=0;
     int commit_id=0;
@@ -16,7 +17,7 @@ int main(){
     char s[10];
     
     /**
-    * in this loop we can see menu and do something.
+    * in this loop we can see menu and selcect your command.
     */
     while (1)
     {
@@ -117,14 +118,14 @@ int main(){
             system("cls");
             break;
         case '#':
-            printf("unselect all \n");
+            unselectAll();
             system("pause");
             system("cls");
             break;
         case '3':
             mkdir("Git\\commit");
             FILE* commits_name=fopen("Git\\commit\\commits_name.txt","a");
-            printf("commit : ");
+            printf("commit message : ");
             scanf("%s",commit);
             fputs(commit,commits_name);
             fputs("\n",commits_name);
@@ -185,7 +186,6 @@ int main(){
             break;
 
         case '9':
-            
             system("cls"); 
             printf(WHT"\n\n--------------------\n"RESET);
             printf(RED"---END GIT---\n"RESET);

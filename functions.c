@@ -2,8 +2,9 @@
 #include<string.h>
 #include<stdlib.h>
 #include<dirent.h>
+
 /** 
- * define for colors in print
+ * define for colors in print.
  */
 
 #define RED "\x1B[31m"
@@ -14,12 +15,46 @@
 #define CYN "\x1B[36m"
 #define WHT "\x1B[37m"
 #define RESET "\x1B[0m"
+/**
+* @param s1[] @param s2[] @param s3[] @param s4[] @param s5[] To create appropriate commands for the system command
+* @param line[] Used to read the lines in each file
+*/
+char s1[100];
+char s2[100];
+char s3[100];
+char s4[100];
+char s5[10];
+char line[100];
+/////////////////////////
+int fileExistInFiles(char filename[]){
+    DIR *d;
+    int counter=0;
+    struct dirent *dir;
+    d = opendir("files");
+    if (d) {
+        while ((dir = readdir(d)) != NULL){
+            if(counter>=2){
+                if(!strcmp(dir->d_name,filename)){
+                    return 1;
+                }
+            }
+            counter++;
+            }
+        closedir(d);
+    return 0;
+    }
+}
+
+
+
+///////////////////////////
+
+
 
 
 /**
- 
  * This function using for check the file exist or no.
- * @param filename[] for search in files.
+ * @param filename[] the name of file that we want to check it in another files.
  */
 
 int fileExist(char filename[]){
@@ -41,12 +76,16 @@ int fileExist(char filename[]){
     return 0;
 }
 
+/**
+ * This function is used to compare two different file If these two files were equal ,Number one is returned.
+ * otherwise , number two is returned
+ * @param dir_1 @param dir_2  The addresses of the files we want to compare them.
+ */
 
-
-int compareFiles(s1, s2) 
+int compareFiles(dir_1, dir_2) 
 { 
-    FILE* fp1=fopen(s1,"r");
-    FILE* fp2=fopen(s2,"r"); 
+    FILE* fp1=fopen(dir_1,"r");
+    FILE* fp2=fopen(dir_2,"r"); 
     char ch1 = getc(fp1); 
     char ch2 = getc(fp2); 
 
@@ -67,7 +106,11 @@ int compareFiles(s1, s2)
 } 
 
 
-/////////////////////////
+/**
+ * This function shows all the changes in the selected files.
+ * @param commit_id In order to find the changes made compared to the previous commits.
+ */
+
 void status(int commit_id){
     printf(GRN"----deleted files----\n"RESET);
         FILE *del_select=fopen("Git\\select.txt","r");
@@ -79,25 +122,27 @@ void status(int commit_id){
             sscanf(l,"%d %s",&i,s);
             if(fileExist(s)==0){
                 printf("%s\n",s);
+                //removeSelect(i);
             }
         }
-        
-    ///////////////////////
+    /**
+     * @param s1[] @param s2[] @param s3[] @param s4[] @param s5[] To create appropriate commands for the system command
+     * @param line[] Used to read the lines in each file
+     */
     char s1[100];
     char s2[100];
     char s3[100];
     char s4[100];
     char s5[10];
     char line[100];
+
     printf(GRN"----selected files----\n"RESET);
-    FILE* s_select=fopen("Git\\select.txt","r");
-    while (fgets(line,100,s_select))
+    FILE* Select=fopen("Git\\select.txt","r");
+    while (fgets(line,100,Select))
     {
-        int id;
-        char s[100];
-        sscanf(line,"%d %s",&id,s);
-        printf("%d) %s\n",id,s);
+        printf("%s\n",line);
     }
+   
     printf(GRN"----Modified files----\n"RESET);
     DIR *d;
     int counter=0;
@@ -168,7 +213,9 @@ void Reset(int reset_id){
         system("cls");
     }
 }
-
+/**
+ * this function shows all the previous commits.
+ */
 void Log(){
     char line[100];
     int i=1;
@@ -176,7 +223,7 @@ void Log(){
     printf("----commits----\n");
     printf("---------------\n");
     while (fgets(line,100,Commits)){
-        printf(GRN"id = %d message = '%s'\n"RESET,i,line);
+        printf(GRN"id = %d message = '%s' \n"RESET,i,line);
         i++;
     }
     printf("---------------\n");
@@ -207,7 +254,6 @@ void createCopy(char filename[],char directory[]){
 
 /** 
  * This function using for delete unselected file.
- * 
  * @param nselect_id id of unselected file.
  */
 
@@ -269,7 +315,15 @@ void select(char filename[],int select_id){
     fprintf(Select,"%d %s\n",select_id,filename);
     fclose(Select);
 }
+/** 
+ * This function using for  Unselect all the files that selected.
+ */
 
+void unselectAll(){
+ FILE* Select=fopen("Git\\select.txt","a");
+ createCopy("Git\\new_select.txt","Git\\select.txt");
+ printf(GRN"All files Unselected ...\n"RESET);
+}
 
 
 void printMenu(){

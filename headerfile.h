@@ -6,3 +6,4 @@ void createCopy(char filename[],char directory[]);
 void select(char filename[],int select_id);
 void Log();
 void removeSelect(int unselect_id);
+int fileExistInFiles(char filename[]);
